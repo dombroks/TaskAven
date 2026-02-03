@@ -1,15 +1,15 @@
 package com.younesbelouche.todo.features.todo.data.datasources
 
-import com.younesbelouche.todo.features.todo.domain.entities.Task
+import com.younesbelouche.todo.features.todo.data.models.TaskDto
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 class InMemoryTodoDataSource {
-    private val _tasks = MutableStateFlow<List<Task>>(emptyList())
-    val tasks: StateFlow<List<Task>> = _tasks.asStateFlow()
+    private val _tasks = MutableStateFlow<List<TaskDto>>(emptyList())
+    val tasks: StateFlow<List<TaskDto>> = _tasks.asStateFlow()
 
-    fun addTask(task: Task) {
+    fun addTask(task: TaskDto) {
         _tasks.value += task
     }
 

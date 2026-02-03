@@ -16,11 +16,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
-import com.younesbelouche.todo.features.todo.domain.entities.Task
+import com.younesbelouche.todo.features.todo.presentation.models.TaskUiModel
 
 @Composable
 fun TaskItem(
-    task: Task,
+    task: TaskUiModel,
     onToggleComplete: () -> Unit,
     onDelete: () -> Unit,
     modifier: Modifier = Modifier

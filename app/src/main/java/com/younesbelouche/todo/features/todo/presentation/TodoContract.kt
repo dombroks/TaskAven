@@ -1,11 +1,12 @@
 package com.younesbelouche.todo.features.todo.presentation
 
-import com.younesbelouche.todo.features.todo.domain.entities.Task
+import com.younesbelouche.todo.features.todo.presentation.models.TaskUiModel
+import java.util.Collections.emptyList
 
 object TodoContract {
 
     data class State(
-        val tasks: List<Task> = emptyList(),
+        val tasks: List<TaskUiModel> = emptyList(),
         val inputText: String = "",
         val errorMessage: String? = null,
         val isLoading: Boolean = false

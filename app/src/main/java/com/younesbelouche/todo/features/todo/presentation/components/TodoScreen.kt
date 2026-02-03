@@ -26,6 +26,7 @@ import com.younesbelouche.todo.features.todo.domain.entities.Task
 import com.younesbelouche.todo.features.todo.presentation.TodoContract
 import com.younesbelouche.todo.features.todo.presentation.TodoViewModel
 import com.younesbelouche.todo.core.ui.theme.ToDoTheme
+import com.younesbelouche.todo.features.todo.presentation.models.TaskUiModel
 
 @Composable
 fun TodoScreen(
@@ -170,7 +171,7 @@ fun TodoScreenPreview_WithError() {
         TodoScreenContent(
             state = TodoContract.State(
                 tasks = listOf(
-                    Task(id = "1", title = "Appeler le vétérinaire", isCompleted = false)
+                    TaskUiModel(id = "1", title = "Appeler le vétérinaire", isCompleted = false)
                 ),
                 inputText = "",
                 errorMessage = "Le titre ne peut pas être vide"

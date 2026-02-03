@@ -6,6 +6,7 @@ import com.younesbelouche.todo.features.todo.domain.usecases.AddTaskUseCase
 import com.younesbelouche.todo.features.todo.domain.usecases.DeleteTaskUseCase
 import com.younesbelouche.todo.features.todo.domain.usecases.GetTasksUseCase
 import com.younesbelouche.todo.features.todo.domain.usecases.ToggleTaskUseCase
+import com.younesbelouche.todo.features.todo.presentation.mappers.toUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -47,7 +48,7 @@ class TodoViewModel @Inject constructor(
     private fun observeTasks() {
         viewModelScope.launch {
             getTasksUseCase().collect { tasks ->
-                _state.update { it.copy(tasks = tasks) }
+                _state.update { it.copy(tasks = tasks.map { task -> task.toUiModel() }) }
             }
         }
     }
