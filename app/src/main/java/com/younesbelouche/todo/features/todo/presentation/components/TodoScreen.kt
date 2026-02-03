@@ -1,0 +1,182 @@
+package com.younesbelouche.todo.features.todo.presentation.components
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.younesbelouche.todo.features.todo.domain.entities.Task
+import com.younesbelouche.todo.features.todo.presentation.TodoContract
+import com.younesbelouche.todo.features.todo.presentation.TodoViewModel
+import com.younesbelouche.todo.core.ui.theme.ToDoTheme
+
+@Composable
+fun TodoScreen(
+    modifier: Modifier = Modifier,
+    viewModel: TodoViewModel = hiltViewModel()
+) {
+    val state by viewModel.state.collectAsState()
+
+    TodoScreenContent(
+        state = state,
+        onEvent = viewModel::handleEvent,
+        modifier = modifier
+    )
+}
+
+@Composable
+fun TodoScreenContent(
+    state: TodoContract.State,
+    onEvent: (TodoContract.Event) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
+            .padding(24.dp)
+    ) {
+        // Title
+        Text(
+            text = "Gestion des Tâches",
+            style = MaterialTheme.typography.headlineLarge,
+            modifier = Modifier.padding(bottom = 4.dp),
+            color = MaterialTheme.colorScheme.onSurface
+        )
+
+        // Subtitle
+        Text(
+            text = "MINIMALISTE V1",
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.padding(bottom = 24.dp)
+        )
+
+        // Add Task Section
+        AddTaskSection(
+            inputText = state.inputText,
+            errorMessage = state.errorMessage,
+            onInputChange = { onEvent(TodoContract.Event.UpdateInputText(it)) },
+            onAddClick = { onEvent(TodoContract.Event.AddTask(state.inputText)) },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(32.dp))
+
+        // Section Header
+        Text(
+            text = "À FAIRE",
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.padding(bottom = 16.dp)
+        )
+
+        // Task List
+        if (state.tasks.isEmpty()) {
+            // Empty state
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "Aucune tâche pour le moment!\nAjoutez votre première tâche ci-dessus.",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    textAlign = TextAlign.Center
+                )
+            }
+        } else {
+            LazyColumn(
+                contentPadding = PaddingValues(vertical = 8.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                items(
+                    items = state.tasks,
+                    key = { task -> task.id }
+                ) { task ->
+                    TaskItem(
+                        task = task,
+                        onToggleComplete = {
+                            onEvent(TodoContract.Event.ToggleTaskCompletion(task.id))
+                        },
+                        onDelete = {
+                            onEvent(TodoContract.Event.DeleteTask(task.id))
+                        }
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun TodoScreenPreview_Empty() {
+    ToDoTheme(darkTheme = true, dynamicColor = false) {
+        TodoScreenContent(
+            state = TodoContract.State(
+                tasks = emptyList(),
+                inputText = "",
+                errorMessage = null
+            ),
+            onEvent = {}
+        )
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun TodoScreenPreview_WithTasks() {
+    ToDoTheme(darkTheme = true, dynamicColor = false) {
+        TodoScreenContent(
+            state = TodoContract.State(
+                tasks = listOf(
+                    Task(id = "1", title = "Appeler le vétérinaire", isCompleted = false),
+                    Task(id = "2", title = "Préparer la présentation V1", isCompleted = false),
+                    Task(id = "3", title = "Acheter du lait", isCompleted = true),
+                    Task(id = "4", title = "Réserver le restaurant", isCompleted = false),
+                    Task(id = "5", title = "Review project proposal", isCompleted = false)
+                ),
+                inputText = "",
+                errorMessage = null
+            ),
+            onEvent = {}
+        )
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun TodoScreenPreview_WithError() {
+    ToDoTheme(darkTheme = true, dynamicColor = false) {
+        TodoScreenContent(
+            state = TodoContract.State(
+                tasks = listOf(
+                    Task(id = "1", title = "Appeler le vétérinaire", isCompleted = false)
+                ),
+                inputText = "",
+                errorMessage = "Le titre ne peut pas être vide"
+            ),
+            onEvent = {}
+        )
+    }
+}
+
