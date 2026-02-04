@@ -18,11 +18,11 @@ fun TodoHeader() {
             text = stringResource(R.string.todo_header_title),
             fontWeight = FontWeight.Bold,
             style = MaterialTheme.typography.headlineLarge,
-            modifier = Modifier.padding(bottom = 4.dp),
+            modifier = Modifier.padding(bottom = 4.dp, top = 16.dp),
             color = MaterialTheme.colorScheme.onSurface
         )
         Text(
-            text = stringResource(R.string.todo_header_title),
+            text = stringResource(R.string.todo_header_subtitle),
             style = MaterialTheme.typography.labelMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(bottom = 32.dp)
