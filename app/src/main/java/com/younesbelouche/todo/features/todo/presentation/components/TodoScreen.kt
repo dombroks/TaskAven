@@ -4,10 +4,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -35,6 +33,8 @@ fun TodoScreen(
 ) {
     val state by viewModel.state.collectAsState()
 
+    // I intentionally leaved it like this
+    // to be able to test is without passing a VM
     TodoScreenContent(
         state = state,
         onEvent = viewModel::handleEvent,
@@ -55,7 +55,7 @@ fun TodoScreenContent(
             .background(MaterialTheme.colorScheme.background)
             .padding(24.dp)
     ) {
-        TodoHeader(modifier = modifier)
+        TodoHeader()
 
         AddTask(
             inputText = state.inputText,
@@ -65,10 +65,10 @@ fun TodoScreenContent(
             modifier = Modifier.fillMaxWidth()
         )
 
-        Title()
+        ListTitle()
 
         if (state.tasks.isEmpty()) {
-            EmptyTasksState(modifier = modifier)
+            EmptyTasksState()
         } else {
             TaskList(
                 tasks = state.tasks,
@@ -80,7 +80,7 @@ fun TodoScreenContent(
 }
 
 @Composable
-private fun Title() {
+private fun ListTitle() {
     Text(
         text = "À FAIRE",
         style = MaterialTheme.typography.labelSmall,
@@ -115,9 +115,9 @@ private fun TaskList(
 }
 
 @Composable
-private fun EmptyTasksState(modifier: Modifier = Modifier) {
+private fun EmptyTasksState() {
     Column(
-        modifier = modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -131,8 +131,8 @@ private fun EmptyTasksState(modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun TodoHeader(modifier: Modifier = Modifier) {
-    Column(modifier = modifier) {
+private fun TodoHeader() {
+    Column(modifier = Modifier) {
         Text(
             text = "Gestion des Tâches",
             fontWeight = FontWeight.Bold,
@@ -144,7 +144,7 @@ private fun TodoHeader(modifier: Modifier = Modifier) {
             text = "MINIMALISTE V1",
             style = MaterialTheme.typography.labelMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.padding(bottom = 8.dp)
+            modifier = Modifier.padding(bottom = 32.dp)
         )
     }
 }
