@@ -7,13 +7,18 @@ import com.younesbelouche.todo.features.todo.data.mappers.toDto
 import com.younesbelouche.todo.features.todo.data.models.TaskDto
 import com.younesbelouche.todo.features.todo.domain.entities.Task
 import com.younesbelouche.todo.features.todo.domain.repositories.TodoRepository
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class TodoRepositoryImpl(
-    private val dataSource: InMemoryTodoDataSource
+class TodoRepositoryImpl @Inject constructor(
+    private val dataSource: InMemoryTodoDataSource,
+    private val dispatcher: CoroutineDispatcher
 ) : TodoRepository {
 
     override fun getTasks(): Flow<Result<List<Task>>> =
@@ -26,11 +31,14 @@ class TodoRepositoryImpl(
             }
             .catch { e ->
                 emit(Result.Error(e))
-            }
+            }.flowOn(dispatcher)
+
 
     override suspend fun addTask(task: Task): Result<Unit> {
         return try {
-            dataSource.addTask(task.toDto())
+            withContext(dispatcher) {
+                dataSource.addTask(task.toDto())
+            }
             Result.Success(Unit)
         } catch (e: Exception) {
             Result.Error(e)
@@ -39,7 +47,9 @@ class TodoRepositoryImpl(
 
     override suspend fun deleteTask(taskId: String): Result<Unit> {
         return try {
-            dataSource.deleteTask(taskId)
+            withContext(dispatcher) {
+                dataSource.deleteTask(taskId)
+            }
             Result.Success(Unit)
         } catch (e: Exception) {
             Result.Error(e)
@@ -48,7 +58,9 @@ class TodoRepositoryImpl(
 
     override suspend fun toggleTaskCompletion(taskId: String): Result<Unit> {
         return try {
-            dataSource.toggleTaskCompletion(taskId)
+            withContext(dispatcher) {
+                dataSource.toggleTaskCompletion(taskId)
+            }
             Result.Success(Unit)
         } catch (e: Exception) {
             Result.Error(e)

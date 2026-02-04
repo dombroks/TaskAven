@@ -9,6 +9,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineDispatcher
 import javax.inject.Singleton
 
 @Module
@@ -26,7 +27,7 @@ object DomainModule {
     @Provides
     @Singleton
     fun provideAddTaskUseCase(
-        repository: TodoRepository
+        repository: TodoRepository,
     ): AddTaskUseCase {
         return AddTaskUseCase(repository)
     }
