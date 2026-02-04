@@ -4,27 +4,32 @@ import com.younesbelouche.todo.features.todo.data.models.TaskDto
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlin.collections.emptyList
 
 class InMemoryTodoDataSource {
-    private val _tasks = MutableStateFlow<List<TaskDto>>(emptyList())
-    val tasks: StateFlow<List<TaskDto>> = _tasks.asStateFlow()
+
+    private var _tasks = mutableListOf<TaskDto>()
+
+    fun getTasks(): List<TaskDto> {
+        return _tasks.toList()
+    }
 
     fun addTask(task: TaskDto) {
-        _tasks.value += task
+        _tasks += task
     }
 
     fun deleteTask(taskId: String) {
-        _tasks.value = _tasks.value.filter { it.id != taskId }
+        _tasks = _tasks.filter { it.id != taskId }.toMutableList()
     }
 
     fun toggleTaskCompletion(taskId: String) {
-        _tasks.value = _tasks.value.map { task ->
+        _tasks = _tasks.map { task ->
             if (task.id == taskId) {
                 task.copy(isCompleted = !task.isCompleted)
             } else {
                 task
             }
-        }
+        } as MutableList<TaskDto>
     }
 }
 
