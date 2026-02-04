@@ -7,7 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Modifier
-import com.younesbelouche.todo.features.todo.presentation.components.TodoScreen
+import com.younesbelouche.todo.features.todo.presentation.TodoScreen
 import com.younesbelouche.todo.core.ui.theme.ToDoTheme
 import dagger.hilt.android.AndroidEntryPoint
 
