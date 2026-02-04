@@ -18,7 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun AddTaskSection(
+fun AddTask(
     inputText: String,
     errorMessage: String?,
     onInputChange: (String) -> Unit,
@@ -61,7 +61,6 @@ fun AddTaskSection(
             )
         }
 
-        // Error message
         if (errorMessage != null) {
             Spacer(modifier = Modifier.height(8.dp))
             Text(

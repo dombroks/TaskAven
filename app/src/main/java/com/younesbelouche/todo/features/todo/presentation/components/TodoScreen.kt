@@ -56,7 +56,7 @@ fun TodoScreenContent(
     ) {
         TodoHeader(modifier = modifier)
 
-        AddTaskSection(
+        AddTask(
             inputText = state.inputText,
             errorMessage = state.errorMessage,
             onInputChange = { onEvent(TodoContract.Event.UpdateInputText(it)) },
