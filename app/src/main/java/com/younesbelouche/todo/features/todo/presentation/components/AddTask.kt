@@ -15,7 +15,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.younesbelouche.todo.R
 
 @Composable
 fun AddTask(
@@ -32,7 +34,7 @@ fun AddTask(
             modifier = Modifier.fillMaxWidth(),
             placeholder = {
                 Text(
-                    "Nouvelle tâche...",
+                    stringResource(R.string.new_task_placeholder),
                     color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
                 )
             },
@@ -55,7 +57,7 @@ fun AddTask(
             shape = RoundedCornerShape(8.dp)
         ) {
             Text(
-                "Ajouter",
+                stringResource(R.string.add_button),
                 modifier = Modifier.padding(vertical = 8.dp),
                 color = MaterialTheme.colorScheme.onSurface
             )

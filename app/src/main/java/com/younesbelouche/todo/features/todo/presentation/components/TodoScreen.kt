@@ -16,11 +16,13 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.younesbelouche.todo.R
 import com.younesbelouche.todo.core.ui.theme.ToDoTheme
 import com.younesbelouche.todo.features.todo.presentation.TodoContract
 import com.younesbelouche.todo.features.todo.presentation.TodoViewModel
@@ -82,7 +84,7 @@ fun TodoScreenContent(
 @Composable
 private fun ListTitle() {
     Text(
-        text = "À FAIRE",
+        text = stringResource(id = R.string.list_title),
         style = MaterialTheme.typography.labelSmall,
         color = MaterialTheme.colorScheme.onSurfaceVariant,
         modifier = Modifier.padding(bottom = 16.dp, top = 32.dp)
@@ -102,8 +104,7 @@ private fun TaskList(
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         items(
-            items = tasks,
-            key = { task -> task.id }
+            tasks, key = TaskUiModel::id
         ) { task ->
             TaskItem(
                 task = task,
@@ -122,7 +123,7 @@ private fun EmptyTasksState() {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Aucune tâche pour le moment!\nAjoutez votre première tâche ci-dessus.",
+            text = stringResource(R.string.empty_tasks_message),
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center
@@ -134,14 +135,14 @@ private fun EmptyTasksState() {
 private fun TodoHeader() {
     Column(modifier = Modifier) {
         Text(
-            text = "Gestion des Tâches",
+            text = stringResource(R.string.todo_header_title),
             fontWeight = FontWeight.Bold,
             style = MaterialTheme.typography.headlineLarge,
             modifier = Modifier.padding(bottom = 4.dp),
             color = MaterialTheme.colorScheme.onSurface
         )
         Text(
-            text = "MINIMALISTE V1",
+            text = stringResource(R.string.todo_header_title),
             style = MaterialTheme.typography.labelMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(bottom = 32.dp)
