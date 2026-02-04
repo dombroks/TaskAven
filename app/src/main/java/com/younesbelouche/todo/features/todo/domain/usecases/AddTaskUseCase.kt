@@ -7,6 +7,10 @@ import com.younesbelouche.todo.core.util.Result
 
 class AddTaskUseCase(private val repository: TodoRepository) {
     suspend operator fun invoke(title: String): Result<Unit> {
+        if (title.isBlank()) {
+            return Result.Error(IllegalArgumentException("Title cannot be blank"))
+        }
+
         val task = Task(
             id = UUID.randomUUID().toString(),
             title = title.trim(),
