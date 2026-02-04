@@ -22,7 +22,6 @@ import com.younesbelouche.todo.R
 @Composable
 fun AddTask(
     inputText: String,
-    errorMessage: String?,
     onInputChange: (String) -> Unit,
     onAddClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -39,7 +38,6 @@ fun AddTask(
                 )
             },
             singleLine = true,
-            isError = errorMessage != null,
             colors = OutlinedTextFieldDefaults.colors(
                 unfocusedBorderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.3f),
                 focusedBorderColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
@@ -60,16 +58,6 @@ fun AddTask(
                 stringResource(R.string.add_button),
                 modifier = Modifier.padding(vertical = 8.dp),
                 color = MaterialTheme.colorScheme.onSurface
-            )
-        }
-
-        if (errorMessage != null) {
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = errorMessage,
-                color = MaterialTheme.colorScheme.error,
-                style = MaterialTheme.typography.bodySmall,
-                modifier = Modifier.padding(start = 4.dp)
             )
         }
     }
