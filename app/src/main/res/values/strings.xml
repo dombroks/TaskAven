@@ -6,4 +6,6 @@
     <string name="empty_tasks_message">Aucune tâche pour le moment!\nAjoutez votre première tâche ci-dessus.</string>
     <string name="new_task_placeholder">Nouvelle tâche...</string>
     <string name="add_button">Ajouter</string>
+    <string name="delete_button">SUPPRIMER</string>
+
 </resources>
