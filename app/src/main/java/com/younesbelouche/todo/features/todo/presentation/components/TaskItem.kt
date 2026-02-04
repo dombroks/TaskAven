@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -15,6 +16,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import com.younesbelouche.todo.R
+import com.younesbelouche.todo.core.ui.theme.Gray
 import com.younesbelouche.todo.features.todo.presentation.models.TaskUiModel
 
 @Composable
@@ -22,17 +24,22 @@ fun TaskItem(
     task: TaskUiModel,
     onToggleComplete: () -> Unit,
     onDelete: () -> Unit,
-    modifier: Modifier = Modifier
 ) {
+    HorizontalDivider(
+        color = Gray.copy(alpha = 0.3f),
+        thickness = 1.dp,
+        modifier = Modifier
+    )
     Row(
-        modifier = modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         XCheckbox(
             checked = task.isCompleted,
             onCheckedChange = { onToggleComplete() }
         )
-
 
         Spacer(modifier = Modifier.width(12.dp))
 
@@ -64,4 +71,6 @@ fun TaskItem(
         }
     }
 }
+
+
 
