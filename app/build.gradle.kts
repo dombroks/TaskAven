@@ -55,10 +55,24 @@ dependencies {
     // Coroutines
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.android)
+    testImplementation(libs.kotlinx.coroutines.test)
 
+
+
+    // hilt
     implementation(libs.hilt.android)
     implementation(libs.hilt.navigation.compose)
     ksp(libs.hilt.compiler)
+
+    // mockk
+    testImplementation(libs.mockk)
+    androidTestImplementation(libs.mockk.android)
+
+    // Turbine
+    testImplementation(libs.turbine)
+
+    // Truth
+    testImplementation(libs.truth)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
