@@ -25,6 +25,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.younesbelouche.todo.core.ui.theme.ToDoTheme
 import com.younesbelouche.todo.features.todo.presentation.TodoContract
 import com.younesbelouche.todo.features.todo.presentation.TodoViewModel
+import com.younesbelouche.todo.features.todo.presentation.models.TaskUiModel
 
 @Composable
 fun TodoScreen(
@@ -53,19 +54,7 @@ fun TodoScreenContent(
             .background(MaterialTheme.colorScheme.background)
             .padding(24.dp)
     ) {
-        Text(
-            text = "Gestion des Tâches",
-            style = MaterialTheme.typography.headlineLarge,
-            modifier = Modifier.padding(bottom = 4.dp),
-            color = MaterialTheme.colorScheme.onSurface
-        )
-
-        Text(
-            text = "MINIMALISTE V1",
-            style = MaterialTheme.typography.labelSmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.padding(bottom = 24.dp)
-        )
+        TodoHeader(modifier = modifier)
 
         AddTaskSection(
             inputText = state.inputText,
@@ -77,49 +66,89 @@ fun TodoScreenContent(
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        Text(
-            text = "À FAIRE",
-            style = MaterialTheme.typography.labelSmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.padding(bottom = 16.dp)
-        )
+        Title()
 
         if (state.tasks.isEmpty()) {
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = "Aucune tâche pour le moment!\nAjoutez votre première tâche ci-dessus.",
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    textAlign = TextAlign.Center
-                )
-            }
+            EmptyTasksState(modifier = modifier)
         } else {
-            LazyColumn(
-                contentPadding = PaddingValues(vertical = 8.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                items(
-                    items = state.tasks,
-                    key = { task -> task.id }
-                ) { task ->
-                    TaskItem(
-                        task = task,
-                        onToggleComplete = {
-                            onEvent(TodoContract.Event.ToggleTaskCompletion(task.id))
-                        },
-                        onDelete = {
-                            onEvent(TodoContract.Event.DeleteTask(task.id))
-                        }
-                    )
-                }
-            }
+            TaskList(
+                tasks = state.tasks,
+                onToggleComplete = { onEvent(TodoContract.Event.ToggleTaskCompletion(it)) },
+                onDelete = { onEvent(TodoContract.Event.DeleteTask(it)) },
+            )
         }
     }
 }
+
+@Composable
+private fun Title() {
+    Text(
+        text = "À FAIRE",
+        style = MaterialTheme.typography.labelSmall,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        modifier = Modifier.padding(bottom = 16.dp)
+    )
+}
+
+@Composable
+private fun TaskList(
+    tasks: List<TaskUiModel>,
+    onToggleComplete: (String) -> Unit,
+    onDelete: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    LazyColumn(
+        modifier = modifier,
+        contentPadding = PaddingValues(vertical = 8.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        items(
+            items = tasks,
+            key = { task -> task.id }
+        ) { task ->
+            TaskItem(
+                task = task,
+                onToggleComplete = { onToggleComplete(task.id) },
+                onDelete = { onDelete(task.id) }
+            )
+        }
+    }
+}
+
+@Composable
+private fun EmptyTasksState(modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = "Aucune tâche pour le moment!\nAjoutez votre première tâche ci-dessus.",
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            textAlign = TextAlign.Center
+        )
+    }
+}
+
+@Composable
+private fun TodoHeader(modifier: Modifier = Modifier) {
+    Column(modifier = modifier) {
+        Text(
+            text = "Gestion des Tâches",
+            style = MaterialTheme.typography.headlineLarge,
+            modifier = Modifier.padding(bottom = 4.dp),
+            color = MaterialTheme.colorScheme.onSurface
+        )
+        Text(
+            text = "MINIMALISTE V1",
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.padding(bottom = 24.dp)
+        )
+    }
+}
+
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
