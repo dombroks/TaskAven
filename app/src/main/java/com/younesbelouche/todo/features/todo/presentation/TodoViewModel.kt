@@ -2,16 +2,15 @@ package com.younesbelouche.todo.features.todo.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.younesbelouche.todo.core.util.Result
 import com.younesbelouche.todo.features.todo.domain.usecases.AddTaskUseCase
 import com.younesbelouche.todo.features.todo.domain.usecases.DeleteTaskUseCase
 import com.younesbelouche.todo.features.todo.domain.usecases.GetTasksUseCase
 import com.younesbelouche.todo.features.todo.domain.usecases.ToggleTaskUseCase
 import com.younesbelouche.todo.features.todo.presentation.mappers.toUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -25,30 +24,50 @@ class TodoViewModel @Inject constructor(
     private val toggleTaskUseCase: ToggleTaskUseCase
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow(TodoContract.State())
-    val state: StateFlow<TodoContract.State> = _state.asStateFlow()
+    private val _state = MutableStateFlow(State())
+    val state: StateFlow<State> = _state.asStateFlow()
 
-    private val _effect = MutableSharedFlow<TodoContract.Effect>()
-    val effect = _effect.asSharedFlow()
 
     init {
-        observeTasks()
+        loadTasks()
     }
 
-    fun handleEvent(event: TodoContract.Event) {
+    fun handleEvent(event: Event) {
         when (event) {
-            is TodoContract.Event.AddTask -> addTask(event.title)
-            is TodoContract.Event.DeleteTask -> deleteTask(event.taskId)
-            is TodoContract.Event.ToggleTaskCompletion -> toggleTask(event.taskId)
-            is TodoContract.Event.UpdateInputText -> updateInputText(event.text)
-            TodoContract.Event.ClearError -> clearError()
+            is Event.AddTask -> addTask(event.title)
+            is Event.DeleteTask -> deleteTask(event.taskId)
+            is Event.ToggleTaskCompletion -> toggleTask(event.taskId)
+            is Event.UpdateInputText -> updateInputText(event.text)
+            Event.ClearError -> clearError()
         }
     }
 
-    private fun observeTasks() {
+    private fun loadTasks() {
         viewModelScope.launch {
-            getTasksUseCase().collect { tasks ->
-                _state.update { it.copy(tasks = tasks.map { task -> task.toUiModel() }) }
+            getTasksUseCase().collect { result ->
+                when (result) {
+                    is Result.Error -> {
+                        _state.update {
+                            it.copy(
+                                isLoading = false,
+                                errorMessage = result.message
+                            )
+                        }
+                    }
+
+                    Result.Loading -> {
+                        _state.update { it.copy(isLoading = true) }
+                    }
+
+                    is Result.Success -> {
+                        _state.update {
+                            it.copy(
+                                tasks = result.data.map { it.toUiModel() },
+                                isLoading = false,
+                            )
+                        }
+                    }
+                }
             }
         }
     }
@@ -57,8 +76,22 @@ class TodoViewModel @Inject constructor(
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true, errorMessage = null) }
 
-            addTaskUseCase(title).fold(
-                onSuccess = {
+
+            when (val result = addTaskUseCase(title)) {
+                is Result.Error -> {
+                    _state.update {
+                        it.copy(
+                            isLoading = false,
+                            errorMessage = result.message
+                        )
+                    }
+                }
+
+                Result.Loading -> {
+                    _state.update { it.copy(isLoading = true) }
+                }
+
+                is Result.Success -> {
                     _state.update {
                         it.copy(
                             inputText = "",
@@ -66,31 +99,70 @@ class TodoViewModel @Inject constructor(
                             errorMessage = null
                         )
                     }
-                    _effect.emit(TodoContract.Effect.TaskAdded)
-                },
-                onFailure = { error ->
-                    val errorMsg = error.message ?: "Failed to add task"
-                    _state.update {
-                        it.copy(
-                            isLoading = false,
-                            errorMessage = errorMsg
-                        )
-                    }
-                    _effect.emit(TodoContract.Effect.ShowError(errorMsg))
                 }
-            )
+            }
         }
     }
 
     private fun deleteTask(taskId: String) {
         viewModelScope.launch {
-            deleteTaskUseCase(taskId)
+            _state.update { it.copy(isLoading = true, errorMessage = null) }
+
+            when (val result = deleteTaskUseCase(taskId)) {
+                is Result.Error -> {
+                    _state.update {
+                        it.copy(
+                            isLoading = false,
+                            errorMessage = result.message
+                        )
+                    }
+                }
+
+                Result.Loading -> {
+                    _state.update { it.copy(isLoading = true) }
+                }
+
+                is Result.Success -> {
+                    _state.update {
+                        it.copy(
+                            inputText = "",
+                            isLoading = false,
+                            errorMessage = null
+                        )
+                    }
+                }
+            }
         }
     }
 
     private fun toggleTask(taskId: String) {
         viewModelScope.launch {
-            toggleTaskUseCase(taskId)
+            _state.update { it.copy(isLoading = true, errorMessage = null) }
+
+            when (val result = toggleTaskUseCase(taskId)) {
+                is Result.Error -> {
+                    _state.update {
+                        it.copy(
+                            isLoading = false,
+                            errorMessage = result.message
+                        )
+                    }
+                }
+
+                Result.Loading -> {
+                    _state.update { it.copy(isLoading = true) }
+                }
+
+                is Result.Success -> {
+                    _state.update {
+                        it.copy(
+                            inputText = "",
+                            isLoading = false,
+                            errorMessage = null
+                        )
+                    }
+                }
+            }
         }
     }
 

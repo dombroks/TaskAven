@@ -1,4 +1,4 @@
-package com.younesbelouche.todo.features.todo.presentation.components
+package com.younesbelouche.todo.features.todo.presentation
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -14,8 +14,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.younesbelouche.todo.core.ui.theme.ToDoTheme
-import com.younesbelouche.todo.features.todo.presentation.TodoContract
-import com.younesbelouche.todo.features.todo.presentation.TodoViewModel
+import com.younesbelouche.todo.features.todo.presentation.components.AddTask
+import com.younesbelouche.todo.features.todo.presentation.components.EmptyTasksState
+import com.younesbelouche.todo.features.todo.presentation.components.ListTitle
+import com.younesbelouche.todo.features.todo.presentation.components.TaskList
+import com.younesbelouche.todo.features.todo.presentation.components.TodoHeader
 
 @Composable
 fun TodoScreen(
@@ -36,8 +39,8 @@ fun TodoScreen(
 
 @Composable
 fun TodoScreenContent(
-    state: TodoContract.State,
-    onEvent: (TodoContract.Event) -> Unit,
+    state: State,
+    onEvent: (Event) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -51,8 +54,8 @@ fun TodoScreenContent(
         AddTask(
             inputText = state.inputText,
             errorMessage = state.errorMessage,
-            onInputChange = { onEvent(TodoContract.Event.UpdateInputText(it)) },
-            onAddClick = { onEvent(TodoContract.Event.AddTask(state.inputText)) },
+            onInputChange = { onEvent(Event.UpdateInputText(it)) },
+            onAddClick = { onEvent(Event.AddTask(state.inputText)) },
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -63,8 +66,8 @@ fun TodoScreenContent(
         } else {
             TaskList(
                 tasks = state.tasks,
-                onToggleComplete = { onEvent(TodoContract.Event.ToggleTaskCompletion(it)) },
-                onDelete = { onEvent(TodoContract.Event.DeleteTask(it)) },
+                onToggleComplete = { onEvent(Event.ToggleTaskCompletion(it)) },
+                onDelete = { onEvent(Event.DeleteTask(it)) },
             )
         }
     }
@@ -76,7 +79,7 @@ fun TodoScreenContent(
 fun TodoScreenPreview_Empty() {
     ToDoTheme(darkTheme = true, dynamicColor = false) {
         TodoScreenContent(
-            state = TodoContract.State(
+            state = State(
                 tasks = emptyList(),
                 inputText = "",
                 errorMessage = null
