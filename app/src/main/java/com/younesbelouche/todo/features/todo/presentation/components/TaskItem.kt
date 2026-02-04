@@ -5,17 +5,16 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import com.younesbelouche.todo.R
 import com.younesbelouche.todo.features.todo.presentation.models.TaskUiModel
 
 @Composable
@@ -29,14 +28,11 @@ fun TaskItem(
         modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Checkbox(
+        XCheckbox(
             checked = task.isCompleted,
-            onCheckedChange = { onToggleComplete() },
-            colors = CheckboxDefaults.colors(
-                checkedColor = Color(0xFF6366F1),
-                uncheckedColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
-            )
+            onCheckedChange = { onToggleComplete() }
         )
+
 
         Spacer(modifier = Modifier.width(12.dp))
 
@@ -61,7 +57,7 @@ fun TaskItem(
             modifier = Modifier.padding(start = 8.dp)
         ) {
             Text(
-                text = "SUPPRIMER",
+                text = stringResource(R.string.delete_button),
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
             )
