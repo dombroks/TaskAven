@@ -42,6 +42,7 @@ fun TodoScreen(
     )
 }
 
+
 @Composable
 fun TodoScreenContent(
     state: TodoContract.State,
@@ -143,41 +144,4 @@ fun TodoScreenPreview_Empty() {
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun TodoScreenPreview_WithTasks() {
-    ToDoTheme(darkTheme = true, dynamicColor = false) {
-        TodoScreenContent(
-            state = TodoContract.State(
-                tasks = listOf(
-                    Task(id = "1", title = "Appeler le vétérinaire", isCompleted = false),
-                    Task(id = "2", title = "Préparer la présentation V1", isCompleted = false),
-                    Task(id = "3", title = "Acheter du lait", isCompleted = true),
-                    Task(id = "4", title = "Réserver le restaurant", isCompleted = false),
-                    Task(id = "5", title = "Review project proposal", isCompleted = false)
-                ),
-                inputText = "",
-                errorMessage = null
-            ),
-            onEvent = {}
-        )
-    }
-}
-
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun TodoScreenPreview_WithError() {
-    ToDoTheme(darkTheme = true, dynamicColor = false) {
-        TodoScreenContent(
-            state = TodoContract.State(
-                tasks = listOf(
-                    TaskUiModel(id = "1", title = "Appeler le vétérinaire", isCompleted = false)
-                ),
-                inputText = "",
-                errorMessage = "Le titre ne peut pas être vide"
-            ),
-            onEvent = {}
-        )
-    }
-}
 

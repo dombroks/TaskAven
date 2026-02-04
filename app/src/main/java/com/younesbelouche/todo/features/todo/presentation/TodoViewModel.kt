@@ -94,6 +94,7 @@ class TodoViewModel @Inject constructor(
         }
     }
 
+
     private fun updateInputText(text: String) {
         _state.update { it.copy(inputText = text, errorMessage = null) }
     }
