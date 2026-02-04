@@ -22,11 +22,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.younesbelouche.todo.features.todo.domain.entities.Task
+import com.younesbelouche.todo.core.ui.theme.ToDoTheme
 import com.younesbelouche.todo.features.todo.presentation.TodoContract
 import com.younesbelouche.todo.features.todo.presentation.TodoViewModel
-import com.younesbelouche.todo.core.ui.theme.ToDoTheme
-import com.younesbelouche.todo.features.todo.presentation.models.TaskUiModel
 
 @Composable
 fun TodoScreen(
@@ -55,7 +53,6 @@ fun TodoScreenContent(
             .background(MaterialTheme.colorScheme.background)
             .padding(24.dp)
     ) {
-        // Title
         Text(
             text = "Gestion des Tâches",
             style = MaterialTheme.typography.headlineLarge,
@@ -63,7 +60,6 @@ fun TodoScreenContent(
             color = MaterialTheme.colorScheme.onSurface
         )
 
-        // Subtitle
         Text(
             text = "MINIMALISTE V1",
             style = MaterialTheme.typography.labelSmall,
@@ -71,7 +67,6 @@ fun TodoScreenContent(
             modifier = Modifier.padding(bottom = 24.dp)
         )
 
-        // Add Task Section
         AddTaskSection(
             inputText = state.inputText,
             errorMessage = state.errorMessage,
@@ -82,7 +77,6 @@ fun TodoScreenContent(
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        // Section Header
         Text(
             text = "À FAIRE",
             style = MaterialTheme.typography.labelSmall,
@@ -90,9 +84,7 @@ fun TodoScreenContent(
             modifier = Modifier.padding(bottom = 16.dp)
         )
 
-        // Task List
         if (state.tasks.isEmpty()) {
-            // Empty state
             Column(
                 modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.Center,
