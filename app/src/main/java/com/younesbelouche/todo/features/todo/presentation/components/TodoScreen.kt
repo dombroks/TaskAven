@@ -18,6 +18,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -64,8 +65,6 @@ fun TodoScreenContent(
             modifier = Modifier.fillMaxWidth()
         )
 
-        Spacer(modifier = Modifier.height(32.dp))
-
         Title()
 
         if (state.tasks.isEmpty()) {
@@ -86,7 +85,7 @@ private fun Title() {
         text = "À FAIRE",
         style = MaterialTheme.typography.labelSmall,
         color = MaterialTheme.colorScheme.onSurfaceVariant,
-        modifier = Modifier.padding(bottom = 16.dp)
+        modifier = Modifier.padding(bottom = 16.dp, top = 32.dp)
     )
 }
 
@@ -136,15 +135,16 @@ private fun TodoHeader(modifier: Modifier = Modifier) {
     Column(modifier = modifier) {
         Text(
             text = "Gestion des Tâches",
+            fontWeight = FontWeight.Bold,
             style = MaterialTheme.typography.headlineLarge,
             modifier = Modifier.padding(bottom = 4.dp),
             color = MaterialTheme.colorScheme.onSurface
         )
         Text(
             text = "MINIMALISTE V1",
-            style = MaterialTheme.typography.labelSmall,
+            style = MaterialTheme.typography.labelMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.padding(bottom = 24.dp)
+            modifier = Modifier.padding(bottom = 8.dp)
         )
     }
 }
