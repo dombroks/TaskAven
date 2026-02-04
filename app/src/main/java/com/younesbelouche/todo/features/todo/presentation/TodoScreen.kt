@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.younesbelouche.todo.core.ui.theme.ToDoTheme
 import com.younesbelouche.todo.features.todo.presentation.components.AddTask
 import com.younesbelouche.todo.features.todo.presentation.components.EmptyTasksState
@@ -31,7 +32,7 @@ fun TodoScreen(
     modifier: Modifier = Modifier,
     viewModel: TodoViewModel = hiltViewModel()
 ) {
-    val state by viewModel.state.collectAsState()
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
     // I intentionally leaved it like this
     // to be able to test is without passing a VM
