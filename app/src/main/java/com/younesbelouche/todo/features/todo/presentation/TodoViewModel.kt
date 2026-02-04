@@ -8,10 +8,8 @@ import com.younesbelouche.todo.features.todo.domain.usecases.GetTasksUseCase
 import com.younesbelouche.todo.features.todo.domain.usecases.ToggleTaskUseCase
 import com.younesbelouche.todo.features.todo.presentation.mappers.toUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -28,11 +26,10 @@ class TodoViewModel @Inject constructor(
     private val _state = MutableStateFlow(TodoContract.State())
     val state: StateFlow<TodoContract.State> = _state.asStateFlow()
 
-    private val _effect = MutableSharedFlow<TodoContract.Effect>()
-    val effect = _effect.asSharedFlow()
+
 
     init {
-        observeTasks()
+        loadTasks()
     }
 
     fun handleEvent(event: TodoContract.Event) {
@@ -45,7 +42,7 @@ class TodoViewModel @Inject constructor(
         }
     }
 
-    private fun observeTasks() {
+    private fun loadTasks() {
         viewModelScope.launch {
             getTasksUseCase().collect { tasks ->
                 _state.update { it.copy(tasks = tasks.map { task -> task.toUiModel() }) }
@@ -66,7 +63,6 @@ class TodoViewModel @Inject constructor(
                             errorMessage = null
                         )
                     }
-                    _effect.emit(TodoContract.Effect.TaskAdded)
                 },
                 onFailure = { error ->
                     val errorMsg = error.message ?: "Failed to add task"
@@ -76,7 +72,6 @@ class TodoViewModel @Inject constructor(
                             errorMessage = errorMsg
                         )
                     }
-                    _effect.emit(TodoContract.Effect.ShowError(errorMsg))
                 }
             )
         }
