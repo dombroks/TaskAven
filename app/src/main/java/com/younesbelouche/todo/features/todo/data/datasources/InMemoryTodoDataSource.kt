@@ -8,28 +8,22 @@ import kotlin.collections.emptyList
 
 class InMemoryTodoDataSource {
 
-    private var _tasks = mutableListOf<TaskDto>()
+    private val _tasks = MutableStateFlow<List<TaskDto>>(emptyList())
+    val tasks: StateFlow<List<TaskDto>> = _tasks
 
-    fun getTasks(): List<TaskDto> {
-        return _tasks.toList()
-    }
 
     fun addTask(task: TaskDto) {
-        _tasks += task
+        _tasks.value += task
     }
 
     fun deleteTask(taskId: String) {
-        _tasks = _tasks.filter { it.id != taskId }.toMutableList()
+        _tasks.value = _tasks.value.filterNot { it.id == taskId }
     }
 
     fun toggleTaskCompletion(taskId: String) {
-        _tasks = _tasks.map { task ->
-            if (task.id == taskId) {
-                task.copy(isCompleted = !task.isCompleted)
-            } else {
-                task
-            }
-        } as MutableList<TaskDto>
+        _tasks.value = _tasks.value.map {
+            if (it.id == taskId) it.copy(isCompleted = !it.isCompleted) else it
+        }
     }
 }
 
